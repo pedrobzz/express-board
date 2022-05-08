@@ -9,11 +9,13 @@
     "@mantine/core": "^4.2.4",
     "@mantine/hooks": "^4.2.4",
     "@mantine/next": "^4.2.4",
+    "axios": "^0.27.2",
     "express": "^4.18.1",
     "next": "latest",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-is": "^17.0.2",
+    "react-query": "^3.39.0",
     "recharts": "^2.1.9",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.6"

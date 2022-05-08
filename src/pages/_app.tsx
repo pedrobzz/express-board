@@ -2,8 +2,10 @@ import type { AppProps } from "next/app";
 
 import { AppContextProvider } from "../common/context/appContext";
 import { MantineProvider } from "@mantine/core";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
+  const queryClient = new QueryClient();
   return (
     <>
       <AppContextProvider>
@@ -15,7 +17,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
             colorScheme: "dark",
           }}
         >
-          <Component {...pageProps} />
+          <QueryClientProvider client={queryClient}>
+            <Component {...pageProps} />
+          </QueryClientProvider>
         </MantineProvider>
       </AppContextProvider>
     </>
