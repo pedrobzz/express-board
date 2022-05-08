@@ -82,4 +82,12 @@ export class RequestEntity {
     if (this.response)
       this.response = JSON.parse(this.response as unknown as string);
   }
+
+  getAvailableMethods(): string[] {
+    return ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"];
+  }
+
+  getAvailableStatus(): string[] {
+    return ["ready", "success", "error"];
+  }
 }

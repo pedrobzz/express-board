@@ -2,11 +2,11 @@
 
 import axios from "axios";
 import { useRouter } from "next/router";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useQuery } from "react-query";
 import Table from "../../common/components/Table";
 
-/* import { Container } from "./styles"; */
+import { Container, TableDiv } from "./styles";
 
 const AllRequests: React.FC = (): JSX.Element => {
   const router = useRouter();
@@ -34,7 +34,7 @@ const AllRequests: React.FC = (): JSX.Element => {
     isLoading,
     isSuccess,
   } = useQuery("requests", getAllRequests, { refetchInterval: 10000 });
-
+  const [expanded, setExpanded] = useState(false);
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -42,9 +42,15 @@ const AllRequests: React.FC = (): JSX.Element => {
   return (
     <div style={{ overflow: "hidden" }}>
       <h1> Hello, AllRequests!</h1>
-      <div style={{ overflowX: "auto" }}>
-        <Table columns={allColumns} data={allRequests} />
-      </div>
+      <Container>
+        <div style={{ width: expanded ? 300 : 50, transition: "0.25" }}>
+          <h1>Hahaha</h1>
+          <button onClick={() => setExpanded(!expanded)}>Click me</button>
+        </div>
+        <TableDiv>
+          <Table columns={allColumns} data={allRequests} />
+        </TableDiv>
+      </Container>
     </div>
   );
 };
