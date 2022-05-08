@@ -1,0 +1,18 @@
+
+version: '3.7'
+
+services:
+  db:
+    image: postgres
+    container_name: express-board-db
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: express-board
+    ports:
+      - 15432:5432
+    volumes:
+      - express-board:/var/lib/postgresql/data
+
+volumes:
+  express-board:
