@@ -1,19 +1,17 @@
 import Menu from "./Menu";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { Burger } from "@mantine/core";
+import { Burger, Accordion } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { useState } from "react";
+import { DatabaseColumn } from "../../../../data/interfaces";
 
 /* import { Container } from "./styles"; */
 
 const LeftFilterMenu: React.FC<{
   toggleColumnsCallback: (data: string) => void;
   reorderColumns: (column: string, move: number) => void;
-  columns: {
-    label: string;
-    viewable: boolean;
-  }[];
+  columns: DatabaseColumn[];
 }> = ({ columns, toggleColumnsCallback, reorderColumns }): JSX.Element => {
   const [expanded, setExpanded] = useState(false);
   const [opened, handlers] = useDisclosure(false);
@@ -48,6 +46,15 @@ const LeftFilterMenu: React.FC<{
           />
         )}
       </div>
+      {expanded && (
+        <Accordion>
+          {columns.map(column => (
+            <Accordion.Item key={column.name} label={column.name}>
+              {column.name}
+            </Accordion.Item>
+          ))}
+        </Accordion>
+      )}
     </div>
   );
 };

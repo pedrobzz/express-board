@@ -2,6 +2,7 @@ import { Menu as MantineMenu, ActionIcon, Checkbox } from "@mantine/core";
 import React from "react";
 
 import { HiOutlineChevronUp, HiOutlineChevronDown } from "react-icons/hi";
+import { DatabaseColumn } from "../../../../data/interfaces";
 
 const Menu: React.FC<{
   opened: boolean;
@@ -11,10 +12,7 @@ const Menu: React.FC<{
     open: () => void;
     close: () => void;
   };
-  columns: {
-    label: string;
-    viewable: boolean;
-  }[];
+  columns: DatabaseColumn[];
 }> = ({
   opened,
   toggleColumnsCallback,
@@ -32,9 +30,9 @@ const Menu: React.FC<{
       <MantineMenu.Label>Columns</MantineMenu.Label>
       {columns.map(column => (
         <MantineMenu.Item
-          key={column.label}
+          key={column.name}
           onClick={() => {
-            toggleColumnsCallback(column.label);
+            toggleColumnsCallback(column.name);
           }}
           icon={<Checkbox checked={column.viewable} />}
           rightSection={
@@ -47,7 +45,7 @@ const Menu: React.FC<{
               <ActionIcon
                 onClick={e => {
                   console.log("sobe");
-                  reorderColumns(column.label, -1);
+                  reorderColumns(column.name, -1);
                   e.stopPropagation();
                 }}
               >
@@ -56,7 +54,7 @@ const Menu: React.FC<{
               <ActionIcon
                 onClick={e => {
                   console.log("desce");
-                  reorderColumns(column.label, 1);
+                  reorderColumns(column.name, 1);
                   e.stopPropagation();
                 }}
               >
@@ -65,7 +63,7 @@ const Menu: React.FC<{
             </div>
           }
         >
-          <span>{column.label}</span>
+          <span>{column.name}</span>
         </MantineMenu.Item>
       ))}
     </MantineMenu>

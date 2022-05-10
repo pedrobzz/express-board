@@ -4,6 +4,7 @@ import "reflect-metadata";
 const AppDataSource = new DataSource({
   synchronize: true,
 
+  name: "default",
   type: "postgres",
   host: process.env.TYPEORM_HOST,
   port: Number(process.env.TYPEORM_PORT),

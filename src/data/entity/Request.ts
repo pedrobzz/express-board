@@ -12,11 +12,11 @@ import {
 
 @Entity({ name: "requests" })
 export class RequestEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: "int" })
   id: number;
-  @Column()
+  @Column({ type: "varchar", length: 255, nullable: true })
   route: string;
-  @Column()
+  @Column({ type: "varchar", length: 255, nullable: true })
   source: string;
   @Column({ type: "text", nullable: true })
   request?: Request;
@@ -28,13 +28,13 @@ export class RequestEntity {
   header?: Record<string, unknown>;
   @Column({ type: "text", nullable: true })
   response?: Record<string, unknown>;
-  @Column({ default: "ready" })
+  @Column({ type: "varchar", length: 255, default: "ready" })
   status?: "ready" | "success" | "error";
-  @Column({ default: "ready" })
+  @Column({ type: "varchar", length: 255, default: "ready" })
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";
-  @Column({ default: new Date().toISOString() })
+  @Column({ type: "varchar", length: 255, default: new Date().toISOString() })
   createdAt?: string;
-  @Column({ default: new Date().toISOString() })
+  @Column({ type: "varchar", length: 255, default: new Date().toISOString() })
   updatedAt?: string;
 
   @BeforeInsert()

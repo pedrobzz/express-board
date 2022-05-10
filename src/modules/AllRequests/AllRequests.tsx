@@ -1,50 +1,50 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import axios from "axios";
-import { useRouter } from "next/router";
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Table from "../../common/components/Table";
+import { DatabaseColumn } from "../../data/interfaces";
+import { getAllColumns, getAllRequests } from "../../services/requests";
 import LeftFilterMenu from "./components/LeftFilterMenu";
 
 import { Container, TableDiv } from "./styles";
 
 const AllRequests: React.FC = (): JSX.Element => {
-  const router = useRouter();
-  const getAllRequests = useCallback(async () => {
-    const request = await axios.get("/api/getAllRequests");
-    console.log(request);
-    return request.data;
-  }, [router.query]);
-  const allColumns = [
-    "id",
-    "route",
-    "source",
-    "request",
-    "body",
-    "params",
-    "header",
-    "response",
-    "status",
-    "method",
-    "createdAt",
-    "updatedAt",
-  ];
-  const [filteredColumns, setFilteredColumns] = useState(
-    allColumns.map(c => ({ label: c, viewable: true })),
-  );
   const {
     data: allRequests,
     isLoading,
     isSuccess,
   } = useQuery("requests", getAllRequests, { refetchInterval: 10000 });
+  const {
+    data: allColumnsObject,
+    isLoading: columnsLoading,
+    isSuccess: columnsSuccess,
+  } = useQuery("allColumns", getAllColumns);
+  const [filteredColumns, setFilteredColumns] =
+    useState<DatabaseColumn[]>(null);
+  useEffect(() => {
+    if (!columnsLoading && columnsSuccess && !filteredColumns) {
+      setFilteredColumns(
+        allColumnsObject.map(c => {
+          return {
+            ...c,
+            viewable: true,
+          };
+        }),
+      );
+    }
+  }, [allColumnsObject]);
 
-  if (isLoading) {
+  if (isLoading || columnsLoading || !filteredColumns) {
     return <div>Loading...</div>;
   }
 
-  const updateColumnIndex = (label: string, move: number): void => {
-    const index = filteredColumns.findIndex(c => c.label === label);
+  if (!isSuccess || !columnsSuccess) {
+    return <div>Cannot connect with Database</div>;
+  }
+
+  const updateColumnIndex = (name: string, move: number): void => {
+    const index = filteredColumns.findIndex(c => c.name === name);
     if (
       index === -1 ||
       (index === 0 && move === -1) ||
@@ -57,7 +57,7 @@ const AllRequests: React.FC = (): JSX.Element => {
     newFilteredColumns.splice(
       index + move,
       0,
-      filteredColumns.find(c => c.label === label),
+      filteredColumns.find(c => c.name === name),
     );
     setFilteredColumns(newFilteredColumns);
   };
@@ -72,7 +72,7 @@ const AllRequests: React.FC = (): JSX.Element => {
           toggleColumnsCallback={data => {
             setFilteredColumns(
               filteredColumns.map(c => {
-                if (c.label === data) {
+                if (c.name === data) {
                   return { ...c, viewable: !c.viewable };
                 }
                 return c;
@@ -82,7 +82,7 @@ const AllRequests: React.FC = (): JSX.Element => {
         />
         <TableDiv>
           <Table
-            columns={filteredColumns.filter(c => c.viewable).map(c => c.label)}
+            columns={filteredColumns.filter(c => c.viewable).map(c => c.name)}
             data={allRequests}
           />
         </TableDiv>
